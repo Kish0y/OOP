@@ -1,4 +1,4 @@
-public class Intro {
+public class Main {
     public static void main(String[] args) {
         System.out.println("My name is ...");
         System.out.println("I want to learn Java because ...");
