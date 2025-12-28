@@ -3,11 +3,9 @@ package store;
 import java.util.ArrayList;
 
 public class Store {
-    private final ArrayList<Product> products = new ArrayList<>();
+    private ArrayList<Product> products = new ArrayList<>();
 
-    public void addProduct(Product p) {
-        products.add(p);
-    }
+    public void addProduct(Product p) { products.add(p); }
 
     public void showProducts() {
         if (products.isEmpty()) {
@@ -23,4 +21,3 @@ public class Store {
         }
         return null;
     }
-}

@@ -1,7 +1,7 @@
 package store;
 
 public class CartItem {
-    private final Product product;
+    private Product product;
     private int qty;
 
     public CartItem(Product product, int qty) {
@@ -11,13 +11,15 @@ public class CartItem {
 
     public Product getProduct() { return product; }
     public int getQty() { return qty; }
+
     public void addQty(int add) { qty += add; }
 
-    public double sum() {
-        return product.getPrice() * qty;
+    public double lineTotal() {
+        return product.getFinalPrice() * qty;
     }
 
+    @Override
     public String toString() {
-        return product.getName() + " x" + qty + " = " + sum();
+        return product.getName() + " x" + qty + " = " + lineTotal();
     }
 }
