@@ -2,24 +2,30 @@ package store;
 
 public class CartItem {
     private Product product;
-    private int qty;
+    private int quantity;
 
-    public CartItem(Product product, int qty) {
+    public CartItem(Product product, int quantity) {
         this.product = product;
-        this.qty = qty;
+        this.quantity = quantity;
     }
 
     public Product getProduct() { return product; }
-    public int getQty() { return qty; }
+    public int getQuantity() { return quantity; }
 
-    public void addQty(int add) { qty += add; }
+    public void setQuantity(int quantity) {
+        if (quantity >= 0) this.quantity = quantity;
+    }
 
-    public double lineTotal() {
-        return product.getFinalPrice() * qty;
+    public void addQuantity(int qty) {
+        if (qty > 0) this.quantity += qty;
+    }
+
+    public double getLineTotal() {
+        return product.finalPrice() * quantity;
     }
 
     @Override
     public String toString() {
-        return product.getName() + " x" + qty + " = " + lineTotal();
+        return product.getName() + " x" + quantity + " | lineTotal=" + getLineTotal();
     }
 }

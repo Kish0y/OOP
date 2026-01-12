@@ -14,9 +14,8 @@ public class Product {
     }
 
     public Product() {
-        this(0, "Unknown Product", 0.0, 0);
+        this(0, "Unknown", 0.0, 0);
     }
-
 
     public int getId() { return id; }
     public String getName() { return name; }
@@ -25,8 +24,12 @@ public class Product {
 
     public void setId(int id) { this.id = id; }
     public void setName(String name) { this.name = name; }
-    public void setPrice(double price) { this.price = price; }
-    public void setStock(int stock) { this.stock = stock; }
+    public void setPrice(double price) {
+        if (price > 0) this.price = price;
+    }
+    public void setStock(int stock) {
+        if (stock >= 0) this.stock = stock;
+    }
 
     public boolean take(int qty) {
         if (qty <= 0 || stock < qty) return false;
@@ -38,8 +41,7 @@ public class Product {
         if (qty > 0) stock += qty;
     }
 
-
-    public double getFinalPrice() {
+    public double finalPrice() {
         return price;
     }
 

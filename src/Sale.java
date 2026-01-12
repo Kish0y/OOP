@@ -4,40 +4,42 @@ public class Sale {
     private int saleId;
     private String customerName;
     private double totalAmount;
-    private String date;
 
-    public Sale(int saleId, String customerName, double totalAmount, String date) {
+    public Sale(int saleId) {
         this.saleId = saleId;
-        this.customerName = customerName;
-        this.totalAmount = totalAmount;
-        this.date = date;
+        this.customerName = "Unknown";
+        this.totalAmount = 0.0;
     }
 
-    public Sale() {
-        this(0, "Unknown", 0.0, "Not set");
+    public double getTotalAmount() { return totalAmount; }
+
+    public void addItem(Product product, int qty) {
+        if (product == null || qty <= 0) return;
+        totalAmount += product.finalPrice() * qty; // полиморфизм: finalPrice()
     }
 
-    public String getDate() { return date; }
-
-    public void checkout(Customer customer, Cart cart) {
-        if (customer == null || cart == null || cart.isEmpty()) return;
-
+    public void checkout(Customer customer) {
         customerName = customer.getName();
-
-        double sum = cart.total();
-        double discount = sum * customer.getDiscountRate();
-        totalAmount = sum - discount;
-
+        double discount = totalAmount * customer.discountRate(); // полиморфизм: discountRate()
+        totalAmount -= discount;
         customer.addPurchase(totalAmount);
-        cart.clear();
     }
+    public void checkout(Cart cart, Customer customer) {
+        if (cart == null || cart.isEmpty() || customer == null) return;
 
-    public boolean isLargeSale() {
-        return totalAmount > 5000;
+        double amount = cart.total();
+        double discount = amount * customer.discountRate(); // полиморфизм
+        amount -= discount;
+
+        totalAmount += amount;
+        customerName = customer.getName();
+        customer.addPurchase(amount);
+
+        cart.clear();
     }
 
     @Override
     public String toString() {
-        return "Sale#" + saleId + " | customer=" + customerName + " | total=" + totalAmount + " | date=" + date;
+        return "Sale#" + saleId + " | customer=" + customerName + " | total=" + totalAmount;
     }
 }

@@ -22,11 +22,12 @@ public class Customer {
     public String getMembershipLevel() { return membershipLevel; }
     public double getTotalPurchases() { return totalPurchases; }
 
-
     public void setCustomerId(int customerId) { this.customerId = customerId; }
     public void setName(String name) { this.name = name; }
     public void setMembershipLevel(String membershipLevel) { this.membershipLevel = membershipLevel; }
-    public void setTotalPurchases(double totalPurchases) { this.totalPurchases = totalPurchases; }
+    public void setTotalPurchases(double totalPurchases) {
+        if (totalPurchases >= 0) this.totalPurchases = totalPurchases;
+    }
 
     public void addPurchase(double amount) {
         if (amount > 0) totalPurchases += amount;
@@ -36,7 +37,7 @@ public class Customer {
         return totalPurchases > 10000;
     }
 
-    public double getDiscountRate() {
+    public double discountRate() {
         return 0.0;
     }
 
