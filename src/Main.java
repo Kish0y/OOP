@@ -1,83 +1,64 @@
-package store;
-
-import java.util.Scanner;
-
 public class Main {
     public static void main(String[] args) {
 
+        System.out.println("=== Grocery Store Management System ===\n");
+
+        Product product1 = new FoodProduct(1, "Milk", 450.0, 20, "2026-01-10");
+        Product product2 = new FoodProduct(2, "Bread", 250.0, 30, "2025-12-31");
+        Product product3 = new Product();
+
+        Customer customer1 = new Customer(101, "Alice", "Regular", 5000);
+        Customer customer2 = new GoldCustomer(102, "Bob", 15000);
+        Customer customer3 = new Customer();
+
         Store store = new Store();
-        Sale sale = new Sale();
+        store.addProduct(product1);
+        store.addProduct(product2);
+        store.addProduct(product3);
 
-        store.addProduct(new Product(1, "Soap", 300, 10));
-        store.addProduct(new FoodProduct(2, "Milk", 450, 20, "2026-01-10"));
-        store.addProduct(new FoodProduct(3, "Bread", 250, 30, "2025-12-31"));
-        store.addProduct(new Product(4, "Shampoo", 1200, 8));
+        Sale sale1 = new Sale(1001, customer1.getName(), 0.0, "2025-09-10");
+
+        System.out.println("--- PRODUCTS ---");
+        store.showProducts();
+
+        System.out.println("\n--- CUSTOMERS ---");
+        System.out.println(customer1);
+        System.out.println(customer2);
+        System.out.println(customer3);
+
+        System.out.println("\n--- TESTING SETTERS ---");
+        product3.setName("Apple");
+        product3.setPrice(300.0);
+        product3.setStockQuantity(50);
+        System.out.println("Updated product3: " + product3);
+
+        customer3.setName("Charles");
+        customer3.setTotalPurchases(12000);
+        System.out.println("Updated customer3: " + customer3);
+
+        System.out.println("\n--- TESTING METHODS ---");
+        System.out.println("Product1 in stock: " + product1.isInStock());
+        product1.restock(10);
+        System.out.println("Product1 after restock: " + product1);
+
+        customer1.addPurchase(6000);
+        System.out.println("Customer1 is VIP: " + customer1.isVIP());
 
 
-        Customer regular = new Customer(101, "Alice");
-        Customer gold = new GoldCustomer(102, "Bob");
+        sale1.addItem(product1, 2);
+        sale1.addItem(product2, 3);
 
-        Scanner input = new Scanner(System.in);
+        System.out.println("\n--- SALE ---");
+        System.out.println(sale1);
+        System.out.println("Large sale: " + sale1.isLargeSale());
 
-        System.out.println("Choose customer: 1) Alice  2) Bob(Gold)");
-        int c = input.nextInt();
-        Customer current = (c == 2) ? gold : regular;
 
-        while (true) {
-            System.out.println("\n=== WEEK 4 SUPERMARKET ===");
-            System.out.println("1) Show products (polymorphism)");
-            System.out.println("2) Buy (uses overridden finalPrice)");
-            System.out.println("3) Checkout (uses overridden discountRate)");
-            System.out.println("4) Check expiry (instanceof + downcasting)");
-            System.out.println("0) Exit");
-            System.out.print("Choose: ");
-
-            int choice = input.nextInt();
-            if (choice == 0) break;
-
-            if (choice == 1) {
-                store.showProducts();
-
-            } else if (choice == 2) {
-                store.showProducts();
-                System.out.print("Enter product id: ");
-                int id = input.nextInt();
-                System.out.print("Enter qty: ");
-                int qty = input.nextInt();
-
-                Product p = store.findById(id);
-                if (p == null) {
-                    System.out.println("Not found ❌");
-                } else if (p.take(qty)) {
-                    sale.addItem(p, qty);
-                    System.out.println("Added ✅ (final price used: " + p.finalPrice() + ")");
-                } else {
-                    System.out.println("Not enough stock ❌");
-                }
-
-            } else if (choice == 3) {
-                if (sale.isEmpty()) System.out.println("Nothing to checkout.");
-                else sale.printReceipt(current);
-
-            } else if (choice == 4) {
-                System.out.print("Enter product id: ");
-                int id = input.nextInt();
-                Product p = store.findById(id);
-
-                if (p == null) {
-                    System.out.println("Not found ❌");
-                } else if (p instanceof FoodProduct) {
-                    FoodProduct fp = (FoodProduct) p;
-                    System.out.println("Expiry date: " + fp.getExpiryDate());
-                } else {
-                    System.out.println("This product has no expiry date.");
-                }
-
-            } else {
-                System.out.println("Wrong option ❌");
-            }
+        System.out.println("\n--- CHECK EXPIRY (instanceof + downcasting) ---");
+        if (product1 instanceof FoodProduct) {
+            FoodProduct fp = (FoodProduct) product1;
+            System.out.println(fp.getName() + " expiry: " + fp.getExpiryDate());
         }
 
-        System.out.println("Bye!");
+        System.out.println("\n=== Program Complete ===");
     }
 }

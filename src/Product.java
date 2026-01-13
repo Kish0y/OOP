@@ -1,27 +1,57 @@
-package store;
-
 public class Product {
-    protected int id;
-    protected String name;
-    protected double price;
-    protected int stock;
 
-    public Product(int id, String name, double price, int stock) {
-        this.id = id;
+    private int productId;
+    private String name;
+    private double price;
+    private int stockQuantity;
+
+    public Product(int productId, String name, double price, int stockQuantity) {
+        this.productId = productId;
         this.name = name;
         this.price = price;
-        this.stock = stock;
+        this.stockQuantity = stockQuantity;
     }
 
-    public int getId() { return id; }
+    public Product() {
+        this.productId = 0;
+        this.name = "Unknown Product";
+        this.price = 0.0;
+        this.stockQuantity = 0;
+    }
+
+    public int getProductId() { return productId; }
     public String getName() { return name; }
     public double getPrice() { return price; }
-    public int getStock() { return stock; }
+    public int getStockQuantity() { return stockQuantity; }
 
-    public boolean take(int qty) {
-        if (qty <= 0 || stock < qty) return false;
-        stock -= qty;
+    public void setProductId(int productId) {
+        if (productId > 0) this.productId = productId;
+    }
+
+    public void setName(String name) {
+        if (name != null && !name.isEmpty()) this.name = name;
+    }
+
+    public void setPrice(double price) {
+        if (price >= 0) this.price = price;
+    }
+
+    public void setStockQuantity(int stockQuantity) {
+        if (stockQuantity >= 0) this.stockQuantity = stockQuantity;
+    }
+
+    public boolean isInStock() {
+        return stockQuantity > 0;
+    }
+
+    public boolean takeFromStock(int qty) {
+        if (qty <= 0 || qty > stockQuantity) return false;
+        stockQuantity -= qty;
         return true;
+    }
+
+    public void restock(int amount) {
+        if (amount > 0) stockQuantity += amount;
     }
 
     public double finalPrice() {
@@ -30,6 +60,11 @@ public class Product {
 
     @Override
     public String toString() {
-        return id + ") " + name + " | price=" + price + " | stock=" + stock + " | final=" + finalPrice();
+        return "Product{productId=" + productId +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                ", stockQuantity=" + stockQuantity +
+                ", finalPrice=" + finalPrice() +
+                '}';
     }
 }
