@@ -35,7 +35,7 @@ public class Sale {
         if (product == null || qty <= 0) return;
 
         if (product.takeFromStock(qty)) {
-            totalAmount += product.finalPrice() * qty; // polymorphism
+            totalAmount += product.finalPrice() * qty;
         }
     }
 

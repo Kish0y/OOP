@@ -11,6 +11,6 @@ public class GoldCustomer extends Customer {
 
     @Override
     public double discountRate() {
-        return 0.10; // 10%
+        return 0.10;
     }
 }
