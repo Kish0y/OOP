@@ -5,15 +5,10 @@ import java.util.ArrayList;
 public class Store {
     private ArrayList<Product> products = new ArrayList<>();
 
-    public void addProduct(Product p) {
-        products.add(p);
-    }
+    public void addProduct(Product p) { products.add(p); }
 
     public void showProducts() {
-        if (products.isEmpty()) {
-            System.out.println("No products.");
-            return;
-        }
+        System.out.println("=== PRODUCTS ===");
         for (Product p : products) {
             System.out.println(p);
         }

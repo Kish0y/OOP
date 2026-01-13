@@ -1,45 +1,35 @@
 package store;
 
+import java.util.ArrayList;
+
 public class Sale {
-    private int saleId;
-    private String customerName;
-    private double totalAmount;
+    private ArrayList<String> lines = new ArrayList<>();
+    private double total = 0;
 
-    public Sale(int saleId) {
-        this.saleId = saleId;
-        this.customerName = "Unknown";
-        this.totalAmount = 0.0;
+    public void addItem(Product p, int qty) {
+        if (p == null || qty <= 0) return;
+
+        double line = p.finalPrice() * qty;
+        total += line;
+        lines.add(p.getName() + " x" + qty + " = " + line);
     }
 
-    public double getTotalAmount() { return totalAmount; }
+    public boolean isEmpty() { return lines.isEmpty(); }
 
-    public void addItem(Product product, int qty) {
-        if (product == null || qty <= 0) return;
-        totalAmount += product.finalPrice() * qty; // полиморфизм: finalPrice()
-    }
+    public void printReceipt(Customer customer) {
+        System.out.println("\n=== RECEIPT ===");
+        for (String s : lines) System.out.println(s);
 
-    public void checkout(Customer customer) {
-        customerName = customer.getName();
-        double discount = totalAmount * customer.discountRate(); // полиморфизм: discountRate()
-        totalAmount -= discount;
-        customer.addPurchase(totalAmount);
-    }
-    public void checkout(Cart cart, Customer customer) {
-        if (cart == null || cart.isEmpty() || customer == null) return;
+        System.out.println("SUBTOTAL = " + total);
 
-        double amount = cart.total();
-        double discount = amount * customer.discountRate(); // полиморфизм
-        amount -= discount;
+        double discount = total * customer.discountRate();
+        double pay = total - discount;
 
-        totalAmount += amount;
-        customerName = customer.getName();
-        customer.addPurchase(amount);
+        System.out.println("Customer: " + customer.getName());
+        System.out.println("Discount: " + (customer.discountRate() * 100) + "%");
+        System.out.println("PAY = " + pay);
 
-        cart.clear();
-    }
-
-    @Override
-    public String toString() {
-        return "Sale#" + saleId + " | customer=" + customerName + " | total=" + totalAmount;
+        lines.clear();
+        total = 0;
     }
 }

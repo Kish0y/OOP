@@ -1,18 +1,12 @@
 package store;
 
 public class GoldCustomer extends Customer {
-
-    public GoldCustomer(int customerId, String name, double totalPurchases) {
-        super(customerId, name, "Gold", totalPurchases);
+    public GoldCustomer(int id, String name) {
+        super(id, name);
     }
 
     @Override
     public double discountRate() {
-        return 0.10; // 10%
-    }
-
-    @Override
-    public String toString() {
-        return super.toString() + " | discount=10%";
+        return 0.10;
     }
 }

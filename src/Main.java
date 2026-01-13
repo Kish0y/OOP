@@ -6,17 +6,16 @@ public class Main {
     public static void main(String[] args) {
 
         Store store = new Store();
+        Sale sale = new Sale();
 
-        Product p1 = new Product(1, "Bread", 250, 30);
-        Product p2 = new FoodProduct(2, "Milk", 450, 20, "2026-01-10"); // upcast
-        Product p3 = new FoodProduct(3, "Eggs", 800, 12, "2025-12-31");
+        store.addProduct(new Product(1, "Soap", 300, 10));
+        store.addProduct(new FoodProduct(2, "Milk", 450, 20, "2026-01-10"));
+        store.addProduct(new FoodProduct(3, "Bread", 250, 30, "2025-12-31"));
+        store.addProduct(new Product(4, "Shampoo", 1200, 8));
 
-        store.addProduct(p1);
-        store.addProduct(p2);
-        store.addProduct(p3);
 
-        Customer regular = new Customer(101, "Alice", "Regular", 5000);
-        Customer gold = new GoldCustomer(102, "Bob", 15000); // upcast в Customer работает
+        Customer regular = new Customer(101, "Alice");
+        Customer gold = new GoldCustomer(102, "Bob");
 
         Scanner input = new Scanner(System.in);
 
@@ -24,19 +23,16 @@ public class Main {
         int c = input.nextInt();
         Customer current = (c == 2) ? gold : regular;
 
-        Sale sale = new Sale(1001);
-
         while (true) {
-            System.out.println("\n=== STORE MENU ===");
-            System.out.println("1) Show products");
-            System.out.println("2) Buy");
-            System.out.println("3) Checkout");
-            System.out.println("4) Show extra info (Downcasting demo)");
+            System.out.println("\n=== WEEK 4 SUPERMARKET ===");
+            System.out.println("1) Show products (polymorphism)");
+            System.out.println("2) Buy (uses overridden finalPrice)");
+            System.out.println("3) Checkout (uses overridden discountRate)");
+            System.out.println("4) Check expiry (instanceof + downcasting)");
             System.out.println("0) Exit");
             System.out.print("Choose: ");
 
             int choice = input.nextInt();
-
             if (choice == 0) break;
 
             if (choice == 1) {
@@ -49,37 +45,36 @@ public class Main {
                 System.out.print("Enter qty: ");
                 int qty = input.nextInt();
 
-                Product prod = store.findById(id);
-                if (prod == null) {
-                    System.out.println("Not found ");
-                } else if (prod.take(qty)) {
-                    sale.addItem(prod, qty);
-                    System.out.println("Added ");
+                Product p = store.findById(id);
+                if (p == null) {
+                    System.out.println("Not found ❌");
+                } else if (p.take(qty)) {
+                    sale.addItem(p, qty);
+                    System.out.println("Added ✅ (final price used: " + p.finalPrice() + ")");
                 } else {
-                    System.out.println("Not enough stock ");
+                    System.out.println("Not enough stock ❌");
                 }
 
             } else if (choice == 3) {
-                sale.checkout(current);
-                System.out.println("CHECKOUT ");
-                System.out.println(sale);
-                System.out.println("Customer total purchases: " + current.getTotalPurchases());
+                if (sale.isEmpty()) System.out.println("Nothing to checkout.");
+                else sale.printReceipt(current);
 
             } else if (choice == 4) {
-                // Downcasting demo (Week 5)
-                System.out.print("Enter product id to check expiry: ");
+                System.out.print("Enter product id: ");
                 int id = input.nextInt();
-                Product prod = store.findById(id);
+                Product p = store.findById(id);
 
-                if (prod instanceof FoodProduct) {
-                    FoodProduct food = (FoodProduct) prod; // downcast
-                    System.out.println("Expiry date = " + food.getExpiryDate());
+                if (p == null) {
+                    System.out.println("Not found ❌");
+                } else if (p instanceof FoodProduct) {
+                    FoodProduct fp = (FoodProduct) p;
+                    System.out.println("Expiry date: " + fp.getExpiryDate());
                 } else {
                     System.out.println("This product has no expiry date.");
                 }
 
             } else {
-                System.out.println("Wrong option ");
+                System.out.println("Wrong option ❌");
             }
         }
 
