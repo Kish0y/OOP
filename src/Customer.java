@@ -6,17 +6,14 @@ public class Customer {
     private double totalPurchases;
 
     public Customer(int customerId, String name, String membershipLevel, double totalPurchases) {
-        this.customerId = customerId;
-        this.name = name;
-        this.membershipLevel = membershipLevel;
-        this.totalPurchases = totalPurchases;
+        setCustomerId(customerId);
+        setName(name);
+        setMembershipLevel(membershipLevel);
+        setTotalPurchases(totalPurchases);
     }
 
     public Customer() {
-        this.customerId = 0;
-        this.name = "Unknown Customer";
-        this.membershipLevel = "Regular";
-        this.totalPurchases = 0.0;
+        this(0, "Unknown Customer", "Regular", 0.0);
     }
 
     public int getCustomerId() { return customerId; }
@@ -25,7 +22,7 @@ public class Customer {
     public double getTotalPurchases() { return totalPurchases; }
 
     public void setCustomerId(int customerId) {
-        if (customerId > 0) this.customerId = customerId;
+        if (customerId >= 0) this.customerId = customerId;
     }
 
     public void setName(String name) {
@@ -55,10 +52,11 @@ public class Customer {
 
     @Override
     public String toString() {
-        return "Customer{customerId=" + customerId +
+        return "Customer{" +
+                "id=" + customerId +
                 ", name='" + name + '\'' +
-                ", membershipLevel='" + membershipLevel + '\'' +
-                ", totalPurchases=" + totalPurchases +
+                ", level='" + membershipLevel + '\'' +
+                ", total=" + totalPurchases +
                 ", discount=" + (discountRate() * 100) + "%" +
                 '}';
     }

@@ -4,7 +4,7 @@ public class FoodProduct extends Product {
 
     public FoodProduct(int productId, String name, double price, int stockQuantity, String expiryDate) {
         super(productId, name, price, stockQuantity);
-        this.expiryDate = expiryDate;
+        setExpiryDate(expiryDate);
     }
 
     public FoodProduct() {
@@ -26,10 +26,10 @@ public class FoodProduct extends Product {
     @Override
     public String toString() {
         return "FoodProduct{" +
-                "productId=" + getProductId() +
+                "id=" + getProductId() +
                 ", name='" + getName() + '\'' +
                 ", price=" + getPrice() +
-                ", stockQuantity=" + getStockQuantity() +
+                ", stock=" + getStockQuantity() +
                 ", expiryDate='" + expiryDate + '\'' +
                 ", finalPrice=" + finalPrice() +
                 '}';

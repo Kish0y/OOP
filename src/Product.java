@@ -6,17 +6,14 @@ public class Product {
     private int stockQuantity;
 
     public Product(int productId, String name, double price, int stockQuantity) {
-        this.productId = productId;
-        this.name = name;
-        this.price = price;
-        this.stockQuantity = stockQuantity;
+        setProductId(productId);
+        setName(name);
+        setPrice(price);
+        setStockQuantity(stockQuantity);
     }
 
     public Product() {
-        this.productId = 0;
-        this.name = "Unknown Product";
-        this.price = 0.0;
-        this.stockQuantity = 0;
+        this(0, "Unknown Product", 0.0, 0);
     }
 
     public int getProductId() { return productId; }
@@ -25,7 +22,7 @@ public class Product {
     public int getStockQuantity() { return stockQuantity; }
 
     public void setProductId(int productId) {
-        if (productId > 0) this.productId = productId;
+        if (productId >= 0) this.productId = productId;
     }
 
     public void setName(String name) {
@@ -60,10 +57,11 @@ public class Product {
 
     @Override
     public String toString() {
-        return "Product{productId=" + productId +
+        return "Product{" +
+                "id=" + productId +
                 ", name='" + name + '\'' +
                 ", price=" + price +
-                ", stockQuantity=" + stockQuantity +
+                ", stock=" + stockQuantity +
                 ", finalPrice=" + finalPrice() +
                 '}';
     }

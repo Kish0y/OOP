@@ -1,54 +1,65 @@
 public class Sale {
 
     private int saleId;
-    private String customerName;
+    private Customer customer;
     private double totalAmount;
     private String date;
 
-    public Sale(int saleId, String customerName, double totalAmount, String date) {
+    public Sale(int saleId, Customer customer, String date) {
         this.saleId = saleId;
-        this.customerName = customerName;
-        this.totalAmount = totalAmount;
+        this.customer = customer;
         this.date = date;
-    }
-
-    public Sale() {
-        this.saleId = 0;
-        this.customerName = "Unknown";
         this.totalAmount = 0.0;
-        this.date = "Not set";
     }
 
     public int getSaleId() { return saleId; }
-    public String getCustomerName() { return customerName; }
+    public Customer getCustomer() { return customer; }
     public double getTotalAmount() { return totalAmount; }
     public String getDate() { return date; }
-
-    public void setSaleId(int saleId) { if (saleId > 0) this.saleId = saleId; }
-    public void setCustomerName(String customerName) {
-        if (customerName != null && !customerName.isEmpty()) this.customerName = customerName;
-    }
-    public void setTotalAmount(double totalAmount) { if (totalAmount >= 0) this.totalAmount = totalAmount; }
-    public void setDate(String date) { this.date = date; }
 
     public void addItem(Product product, int qty) {
         if (product == null || qty <= 0) return;
 
-        if (product.takeFromStock(qty)) {
-            totalAmount += product.finalPrice() * qty;
-        }
+        if (!product.takeFromStock(qty)) return;
+
+        totalAmount += product.finalPrice() * qty;
+    }
+
+    public double totalAfterDiscount() {
+        return totalAmount * (1 - customer.discountRate());
     }
 
     public boolean isLargeSale() {
-        return totalAmount > 5000;
+        return totalAfterDiscount() > 5000;
+    }
+
+    public void printReceiptHeader() {
+        System.out.println("=== RECEIPT ===");
+        System.out.println("Sale ID: " + saleId);
+        System.out.println("Customer: " + customer.getName() + " (" + customer.getMembershipLevel() + ")");
+        System.out.println("Discount: " + (customer.discountRate() * 100) + "%");
+
+        if (customer instanceof GoldCustomer) {
+            GoldCustomer gc = (GoldCustomer) customer;
+            System.out.println("Gold customer detected ✅ (rate=" + (gc.discountRate() * 100) + "%)");
+        }
+    }
+
+    public void printProductExtra(Product p) {
+        if (p instanceof FoodProduct) {
+            FoodProduct fp = (FoodProduct) p;
+            System.out.println("   (Food expiry: " + fp.getExpiryDate() + ")");
+        }
     }
 
     @Override
     public String toString() {
-        return "Sale{saleId=" + saleId +
-                ", customerName='" + customerName + '\'' +
-                ", totalAmount=" + totalAmount +
+        return "Sale{" +
+                "saleId=" + saleId +
+                ", customer=" + customer.getName() +
+                ", subtotal=" + totalAmount +
+                ", totalAfterDiscount=" + totalAfterDiscount() +
                 ", date='" + date + '\'' +
                 '}';
     }
-}}
+}
