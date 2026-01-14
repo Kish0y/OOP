@@ -3,7 +3,7 @@ public class FoodProduct extends Product {
     private String expiryDate;
 
     public FoodProduct(int productId, String name, double price, int stockQuantity, String expiryDate) {
-        super(productId, name, price, stockQuantity); // super first
+        super(productId, name, price, stockQuantity);
         this.expiryDate = expiryDate;
     }
 
@@ -20,7 +20,7 @@ public class FoodProduct extends Product {
 
     @Override
     public double finalPrice() {
-        return getPrice() * 0.95; // 5% discount example
+        return getPrice() * 0.95;
     }
 
     @Override
