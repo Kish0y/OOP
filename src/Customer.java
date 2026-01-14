@@ -26,12 +26,15 @@ public class Customer {
     }
 
     public void setName(String name) {
-        if (name != null && !name.isEmpty()) this.name = name;
+        if (name != null && !name.trim().isEmpty()) this.name = name.trim();
     }
 
     public void setMembershipLevel(String membershipLevel) {
-        if (membershipLevel != null && !membershipLevel.isEmpty())
-            this.membershipLevel = membershipLevel;
+        if (membershipLevel == null || membershipLevel.trim().isEmpty()) {
+            this.membershipLevel = "Regular";
+        } else {
+            this.membershipLevel = membershipLevel.trim();
+        }
     }
 
     public void setTotalPurchases(double totalPurchases) {
@@ -56,7 +59,7 @@ public class Customer {
                 "id=" + customerId +
                 ", name='" + name + '\'' +
                 ", level='" + membershipLevel + '\'' +
-                ", total=" + totalPurchases +
+                ", totalPurchases=" + totalPurchases +
                 ", discount=" + (discountRate() * 100) + "%" +
                 '}';
     }

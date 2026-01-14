@@ -1,34 +1,123 @@
+import java.util.Scanner;
+
 public class Main {
+
     public static void main(String[] args) {
 
-        Store store = new Store();
+        Scanner sc = new Scanner(System.in);
+        Store Store = new Store();
 
-        store.addProduct(new FoodProduct(1, "Milk", 450.0, 20, "2026-01-10"));
-        store.addProduct(new FoodProduct(2, "Bread", 250.0, 30, "2025-12-31"));
-        store.addProduct(new Product(3, "Soap", 300.0, 10));
+        Store.addProduct(new FoodProduct(1, "Milk", 450.0, 20, "2026-01-10"));
+        Store.addProduct(new FoodProduct(2, "Bread", 250.0, 30, "2025-12-31"));
+        Store.addProduct(new Product(3, "Soap", 300.0, 10));
 
-        Customer customer = new GoldCustomer(102, "Bob", 15000);
+        int choice;
 
-        store.showProducts();
+        do {
+            System.out.println("=== GROCERY STORE SYSTEM ===");
+            System.out.println("1. Add Product");
+            System.out.println("2. View All Products");
+            System.out.println("3. Add Customer");
+            System.out.println("4. View All Customers");
+            System.out.println("0. Exit");
+            System.out.print("Enter choice: ");
 
-        Sale sale = new Sale(1001, customer, "2026-01-14");
+            choice = readInt(sc);
 
-        Product milk = store.findById(1);
-        Product soap = store.findById(3);
+            switch (choice) {
+                case 1:
+                    addProductMenu(sc, Store);
+                    break;
+                case 2:
+                    Store.showProducts();
+                    break;
+                case 3:
+                    addCustomerMenu(sc, Store);
+                    break;
+                case 0:
+                    System.out.println("Bye!");
+                    break;
+                default:
+                    System.out.println("Invalid choice. Try again.");
+            }
 
-        sale.addItem(milk, 2);
-        sale.addItem(soap, 1);
+            System.out.println();
 
-        System.out.println();
-        sale.printReceiptHeader();
-        System.out.println("Subtotal: " + sale.getTotalAmount());
-        System.out.println("Pay: " + sale.totalAfterDiscount());
-        System.out.println("Large sale: " + sale.isLargeSale());
+        } while (choice != 0);
 
-        System.out.println("\nExtra info:");
-        sale.printProductExtra(milk);
-        sale.printProductExtra(soap);
+        sc.close();
+    }
 
-        System.out.println("\n" + sale);
+
+    private static void addProductMenu(Scanner sc, Store store) {
+        System.out.println("Add Product:");
+        System.out.println("1) Normal Product");
+        System.out.println("2) Food Product");
+        System.out.print("Choose type: ");
+
+        int type = readInt(sc);
+
+        System.out.print("ID: ");
+        int id = readInt(sc);
+
+        System.out.print("Name: ");
+        sc.nextLine();
+        String name = sc.nextLine();
+
+        System.out.print("Price: ");
+        double price = readDouble(sc);
+
+        System.out.print("Stock: ");
+        int stock = readInt(sc);
+
+        if (type == 2) {
+            System.out.print("Expiry date (YYYY-MM-DD): ");
+            String expiry = sc.nextLine();
+            store.addProduct(new FoodProduct(id, name, price, stock, expiry));
+        } else {
+            store.addProduct(new Product(id, name, price, stock));
+        }
+
+        System.out.println(" Product added.");
+    }
+
+    private static void addCustomerMenu(Scanner sc, Store store) {
+        System.out.println("Add Customer:");
+        System.out.println("1) Regular Customer");
+        System.out.println("2) Gold Customer");
+        System.out.print("Choose type: ");
+
+        int type = readInt(sc);
+
+        System.out.print("Customer ID: ");
+        int id = readInt(sc);
+
+        System.out.print("Name: ");
+        sc.nextLine();
+        String name = sc.nextLine();
+
+        System.out.print("Total purchases: ");
+        double total = readDouble(sc);
+
+
+
+        System.out.println(" Customer added.");
+    }
+
+
+    private static int readInt(Scanner sc) {
+        while (!sc.hasNextInt()) {
+            System.out.print("Enter a number: ");
+            sc.next();
+        }
+        return sc.nextInt();
+    }
+
+    private static double readDouble(Scanner sc) {
+        while (!sc.hasNextDouble()) {
+            System.out.print("Enter a number (double): ");
+            sc.next();
+        }
+        return sc.nextDouble();
     }
 }
