@@ -1,4 +1,4 @@
-public class Product {
+public abstract class Product {
 
     private int productId;
     private String name;
@@ -12,48 +12,51 @@ public class Product {
         setStockQuantity(stockQuantity);
     }
 
-    public Product() {
-        this(0, "Unknown Product", 0.0, 0);
-    }
-
     public int getProductId() { return productId; }
     public String getName() { return name; }
     public double getPrice() { return price; }
     public int getStockQuantity() { return stockQuantity; }
 
     public void setProductId(int productId) {
-        if (productId >= 0) this.productId = productId;
+        if (productId <= 0) throw new IllegalArgumentException("Product ID must be positive");
+        this.productId = productId;
     }
 
     public void setName(String name) {
-        if (name != null && !name.isEmpty()) this.name = name;
+        if (name == null || name.trim().isEmpty())
+            throw new IllegalArgumentException("Product name cannot be empty");
+        this.name = name.trim();
     }
 
     public void setPrice(double price) {
-        if (price >= 0) this.price = price;
+        if (price < 0) throw new IllegalArgumentException("Price cannot be negative");
+        this.price = price;
     }
 
     public void setStockQuantity(int stockQuantity) {
-        if (stockQuantity >= 0) this.stockQuantity = stockQuantity;
+        if (stockQuantity < 0) throw new IllegalArgumentException("Stock cannot be negative");
+        this.stockQuantity = stockQuantity;
     }
 
     public boolean isInStock() {
         return stockQuantity > 0;
     }
 
-    public boolean takeFromStock(int qty) {
-        if (qty <= 0 || qty > stockQuantity) return false;
-        stockQuantity -= qty;
-        return true;
-    }
-
     public void restock(int amount) {
-        if (amount > 0) stockQuantity += amount;
+        if (amount <= 0) throw new IllegalArgumentException("Restock amount must be > 0");
+        stockQuantity += amount;
     }
 
-    public double finalPrice() {
-        return price;
+    public void takeFromStock(int qty) throws OutOfStockException {
+        if (qty <= 0) throw new IllegalArgumentException("Quantity must be > 0");
+        if (qty > stockQuantity) {
+            throw new OutOfStockException("Not enough stock for product: " + name);
+        }
+        stockQuantity -= qty;
     }
+
+    // POLYMORPHISM
+    public abstract double finalPrice();
 
     @Override
     public String toString() {
