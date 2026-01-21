@@ -15,7 +15,7 @@ public class Store implements Menu {
         products.add(new FoodProduct(10, "Milk", 600, 30, "2026-02-01"));
         products.add(new FoodProduct(11, "Bread", 250, 50, "2026-01-28"));
         products.add(new FoodProduct(12, "Apples", 900, 15, "2026-02-10"));
-        products.get(2).applyDiscount(10); // Apples -10%
+        products.get(2).applyDiscount(10);
     }
 
     @Override
