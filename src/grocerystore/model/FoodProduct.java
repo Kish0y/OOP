@@ -9,7 +9,9 @@ public class FoodProduct extends Product {
         setExpirationDate(expirationDate);
     }
 
-    public String getExpirationDate() { return expirationDate; }
+    public String getExpirationDate() {
+        return expirationDate;
+    }
 
     public void setExpirationDate(String expirationDate) {
         if (expirationDate == null || expirationDate.trim().isEmpty())
@@ -26,3 +28,4 @@ public class FoodProduct extends Product {
     public String toString() {
         return super.toString() + ", exp='" + expirationDate + "'";
     }
+}

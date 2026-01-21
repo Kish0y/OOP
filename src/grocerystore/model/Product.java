@@ -1,5 +1,7 @@
 package grocerystore.model;
 
+import grocerystore.exception.Discountable;
+
 public abstract class Product implements Discountable {
 
     protected int productId;
