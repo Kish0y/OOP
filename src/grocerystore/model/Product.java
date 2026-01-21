@@ -1,9 +1,11 @@
+package grocerystore.model;
+
 public abstract class Product implements Discountable {
+
     protected int productId;
     protected String name;
     protected double price;
     protected int stockQuantity;
-
     protected double discountPercent;
 
     public Product(int productId, String name, double price, int stockQuantity) {
@@ -14,12 +16,16 @@ public abstract class Product implements Discountable {
         this.discountPercent = 0;
     }
 
+                  // abstract method
+    public abstract String getCategory();
+
     public int getProductId() { return productId; }
     public String getName() { return name; }
     public double getPrice() { return price; }
     public int getStockQuantity() { return stockQuantity; }
     public double getDiscountPercent() { return discountPercent; }
 
+                   // setters
     public void setProductId(int productId) {
         if (productId <= 0) throw new IllegalArgumentException("Product ID must be positive");
         this.productId = productId;
@@ -56,6 +62,7 @@ public abstract class Product implements Discountable {
         stockQuantity -= qty;
     }
 
+                                                 // Discountable
     @Override
     public void applyDiscount(double percent) {
         if (percent <= 0 || percent > 100)
@@ -72,8 +79,6 @@ public abstract class Product implements Discountable {
     public double getFinalPrice() {
         return price * (1 - discountPercent / 100.0);
     }
-
-    public abstract String getCategory();
 
     @Override
     public String toString() {

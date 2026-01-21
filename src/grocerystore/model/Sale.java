@@ -1,17 +1,19 @@
+package grocerystore.model;
+
 public class Sale {
+
     private int saleId;
     private int customerId;
     private int productId;
     private int quantity;
-
     private double unitFinalPrice;
     private double extraCustomerDiscountPercent;
     private double totalCost;
-
-    private String status;                                   // Pending  Completed  Cancelled
+    private String status;
 
     public Sale(int saleId, int customerId, int productId, int quantity,
-                double unitFinalPrice, double extraCustomerDiscountPercent, double totalCost, String status) {
+                double unitFinalPrice, double extraCustomerDiscountPercent,
+                double totalCost, String status) {
         setSaleId(saleId);
         setCustomerId(customerId);
         setProductId(productId);
@@ -26,8 +28,6 @@ public class Sale {
     public int getCustomerId() { return customerId; }
     public int getProductId() { return productId; }
     public int getQuantity() { return quantity; }
-    public double getUnitFinalPrice() { return unitFinalPrice; }
-    public double getExtraCustomerDiscountPercent() { return extraCustomerDiscountPercent; }
     public double getTotalCost() { return totalCost; }
     public String getStatus() { return status; }
 
@@ -85,7 +85,7 @@ public class Sale {
                 ", productId=" + productId +
                 ", qty=" + quantity +
                 ", unitFinal=" + String.format("%.2f", unitFinalPrice) +
-                ", customerExtraDiscount=" + extraCustomerDiscountPercent + "%" +
+                ", extraDisc=" + extraCustomerDiscountPercent + "%" +
                 ", total=" + String.format("%.2f", totalCost) +
                 ", status='" + status + "'}";
     }

@@ -1,4 +1,7 @@
+package grocerystore.model;
+
 public class FoodProduct extends Product {
+
     private String expirationDate;
 
     public FoodProduct(int productId, String name, double price, int stockQuantity, String expirationDate) {
@@ -19,12 +22,7 @@ public class FoodProduct extends Product {
         return "Food";
     }
 
-    public boolean isExpiredDummyCheck() {
-        return false;
-    }
-
     @Override
     public String toString() {
         return super.toString() + ", exp='" + expirationDate + "'";
     }
-}

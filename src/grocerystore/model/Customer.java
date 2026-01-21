@@ -1,4 +1,7 @@
+package grocerystore.model;
+
 public class Customer {
+
     protected int customerId;
     protected String name;
     protected String phone;
@@ -44,8 +47,9 @@ public class Customer {
         balance -= amount;
     }
 
+                 // polymorphism
     public double getExtraDiscountPercent() {
-        return 0;      // обычнй
+        return 0;
     }
 
     public String getType() {

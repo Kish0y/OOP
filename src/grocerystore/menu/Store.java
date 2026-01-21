@@ -1,3 +1,8 @@
+package grocerystore.menu;
+
+import grocerystore.exception.InvalidInputException;
+import grocerystore.model.*;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -38,10 +43,12 @@ public class Store implements Menu {
     @Override
     public void run() {
         boolean running = true;
+
         while (running) {
             displayMenu();
             try {
                 int choice = readInt("Enter choice: ");
+
                 switch (choice) {
                     case 1 -> addFoodProduct();
                     case 2 -> viewProducts();
@@ -54,8 +61,11 @@ public class Store implements Menu {
                     case 0 -> running = false;
                     default -> System.out.println("Invalid choice!");
                 }
+
             } catch (InvalidInputException e) {
                 System.out.println("Input error: " + e.getMessage());
+            } catch (NumberFormatException e) {
+                System.out.println("Number format error: " + e.getMessage());
             } catch (IllegalArgumentException e) {
                 System.out.println("Validation error: " + e.getMessage());
             } catch (Exception e) {
@@ -67,6 +77,7 @@ public class Store implements Menu {
                 scanner.nextLine();
             }
         }
+
         scanner.close();
         System.out.println("Bye! Store closed.");
     }
@@ -77,7 +88,7 @@ public class Store implements Menu {
         String name = readNonEmpty("Name: ");
         double price = readDouble("Price: ");
         int stock = readInt("Stock quantity: ");
-        String exp = readNonEmpty("Expiration date (e.g., 2026-02-01): ");
+        String exp = readNonEmpty("Expiration date (YYYY-MM-DD): ");
         products.add(new FoodProduct(id, name, price, stock, exp));
         System.out.println("Food product added!");
     }
@@ -135,10 +146,10 @@ public class Store implements Menu {
             System.out.println("No customers.");
             return;
         }
+
         for (Customer c : customers) {
             System.out.println(c);
 
-                                   // instanceof + downcasting
             if (c instanceof GoldCustomer gc && gc.getLoyaltyPoints() >= 100) {
                 System.out.println("   VIP Gold 👑");
             }
@@ -192,14 +203,20 @@ public class Store implements Menu {
 
     private int readInt(String prompt) throws InvalidInputException {
         String s = readLine(prompt);
-        try { return Integer.parseInt(s); }
-        catch (NumberFormatException e) { throw new InvalidInputException("Expected integer, got: " + s); }
+        try {
+            return Integer.parseInt(s);
+        } catch (NumberFormatException e) {
+            throw new InvalidInputException("Expected integer, got: " + s);
+        }
     }
 
     private double readDouble(String prompt) throws InvalidInputException {
         String s = readLine(prompt);
-        try { return Double.parseDouble(s); }
-        catch (NumberFormatException e) { throw new InvalidInputException("Expected number, got: " + s); }
+        try {
+            return Double.parseDouble(s);
+        } catch (NumberFormatException e) {
+            throw new InvalidInputException("Expected number, got: " + s);
+        }
     }
 
     private String readNonEmpty(String prompt) throws InvalidInputException {

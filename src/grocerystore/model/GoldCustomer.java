@@ -1,4 +1,7 @@
+package grocerystore.model;
+
 public class GoldCustomer extends Customer {
+
     private int loyaltyPoints;
 
     public GoldCustomer(int customerId, String name, String phone, double balance, int loyaltyPoints) {
