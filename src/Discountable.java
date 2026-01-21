@@ -1,3 +1,5 @@
 public interface Discountable {
-    double discountRate();
+    void applyDiscount(double percent);
+    boolean hasDiscount();
+    double getFinalPrice();
 }

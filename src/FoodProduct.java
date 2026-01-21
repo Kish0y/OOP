@@ -1,34 +1,30 @@
 public class FoodProduct extends Product {
+    private String expirationDate;
 
-    private String expiryDate;
-
-    public FoodProduct(int productId, String name, double price, int stockQuantity, String expiryDate) {
-        super(productId, name, price, stockQuantity);                    // super
-        setExpiryDate(expiryDate);
+    public FoodProduct(int productId, String name, double price, int stockQuantity, String expirationDate) {
+        super(productId, name, price, stockQuantity);
+        setExpirationDate(expirationDate);
     }
 
-    public String getExpiryDate() { return expiryDate; }
+    public String getExpirationDate() { return expirationDate; }
 
-    public void setExpiryDate(String expiryDate) {
-        if (expiryDate == null || expiryDate.trim().isEmpty())
-            throw new IllegalArgumentException("Expiry date cannot be empty");
-        this.expiryDate = expiryDate.trim();
+    public void setExpirationDate(String expirationDate) {
+        if (expirationDate == null || expirationDate.trim().isEmpty())
+            throw new IllegalArgumentException("Expiration date cannot be empty");
+        this.expirationDate = expirationDate.trim();
     }
 
     @Override
-    public double finalPrice() {            // override
-        return getPrice() * 0.95;
+    public String getCategory() {
+        return "Food";
+    }
+
+    public boolean isExpiredDummyCheck() {
+        return false;
     }
 
     @Override
     public String toString() {
-        return "FoodProduct{" +
-                "id=" + getProductId() +
-                ", name='" + getName() + '\'' +
-                ", price=" + getPrice() +
-                ", stock=" + getStockQuantity() +
-                ", expiryDate='" + expiryDate + '\'' +
-                ", finalPrice=" + finalPrice() +
-                '}';
+        return super.toString() + ", exp='" + expirationDate + "'";
     }
 }

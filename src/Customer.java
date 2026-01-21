@@ -1,21 +1,20 @@
-public class Customer implements Discountable {
+public class Customer {
+    protected int customerId;
+    protected String name;
+    protected String phone;
+    protected double balance;
 
-    private int customerId;
-    private String name;
-    private String membershipLevel;
-    private double totalPurchases;
-
-    public Customer(int customerId, String name, String membershipLevel, double totalPurchases) {
+    public Customer(int customerId, String name, String phone, double balance) {
         setCustomerId(customerId);
         setName(name);
-        setMembershipLevel(membershipLevel);
-        setTotalPurchases(totalPurchases);
+        setPhone(phone);
+        setBalance(balance);
     }
 
     public int getCustomerId() { return customerId; }
     public String getName() { return name; }
-    public String getMembershipLevel() { return membershipLevel; }
-    public double getTotalPurchases() { return totalPurchases; }
+    public String getPhone() { return phone; }
+    public double getBalance() { return balance; }
 
     public void setCustomerId(int customerId) {
         if (customerId <= 0) throw new IllegalArgumentException("Customer ID must be positive");
@@ -28,36 +27,37 @@ public class Customer implements Discountable {
         this.name = name.trim();
     }
 
-    public void setMembershipLevel(String membershipLevel) {
-        if (membershipLevel == null || membershipLevel.trim().isEmpty())
-            throw new IllegalArgumentException("Membership level cannot be empty");
-        this.membershipLevel = membershipLevel.trim();
+    public void setPhone(String phone) {
+        if (phone == null || phone.trim().isEmpty())
+            throw new IllegalArgumentException("Phone cannot be empty");
+        this.phone = phone.trim();
     }
 
-    public void setTotalPurchases(double totalPurchases) {
-        if (totalPurchases < 0) throw new IllegalArgumentException("Total purchases cannot be negative");
-        this.totalPurchases = totalPurchases;
+    public void setBalance(double balance) {
+        if (balance < 0) throw new IllegalArgumentException("Balance cannot be negative");
+        this.balance = balance;
     }
 
-    public void addPurchase(double amount) {
-        if (amount <= 0) throw new IllegalArgumentException("Purchase amount must be > 0");
-        totalPurchases += amount;
+    public void pay(double amount) {
+        if (amount <= 0) throw new IllegalArgumentException("Amount must be > 0");
+        if (amount > balance) throw new IllegalArgumentException("Not enough money");
+        balance -= amount;
     }
 
-                    // POLYMORPHISM
-    @Override
-    public double discountRate() {
-        return 0.0;
+    public double getExtraDiscountPercent() {
+        return 0;      // обычнй
+    }
+
+    public String getType() {
+        return "Regular";
     }
 
     @Override
     public String toString() {
-        return "Customer{" +
-                "id=" + customerId +
+        return "Customer{id=" + customerId +
                 ", name='" + name + '\'' +
-                ", level='" + membershipLevel + '\'' +
-                ", totalPurchases=" + totalPurchases +
-                ", discount=" + (discountRate() * 100) + "%" +
-                '}';
+                ", phone='" + phone + '\'' +
+                ", balance=" + String.format("%.2f", balance) +
+                ", type=" + getType() + "}";
     }
 }
