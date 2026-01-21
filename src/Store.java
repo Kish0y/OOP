@@ -138,7 +138,7 @@ public class Store implements Menu {
         for (Customer c : customers) {
             System.out.println(c);
 
-            // instanceof + downcasting (Week4)
+                                   // instanceof + downcasting
             if (c instanceof GoldCustomer gc && gc.getLoyaltyPoints() >= 100) {
                 System.out.println("   VIP Gold 👑");
             }
@@ -158,7 +158,7 @@ public class Store implements Menu {
         product.takeFromStock(qty);
 
         double unitFinal = product.getFinalPrice();
-        double extraDisc = customer.getExtraDiscountPercent(); // GoldCustomer: 5%
+        double extraDisc = customer.getExtraDiscountPercent();
         double total = unitFinal * qty * (1 - extraDisc / 100.0);
 
         customer.pay(total);
