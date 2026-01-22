@@ -83,23 +83,24 @@ public class Store implements Menu {
     }
 
     private void addFoodProduct() throws InvalidInputException {
-        System.out.println("\n--- ADD FOOD PRODUCT ---");
-        int id = readInt("Product ID: ");
+        System.out.println("---ADD FOOD PRODUCT----");
+        int id = readInt("Product id: ");
         String name = readNonEmpty("Name: ");
-        double price = readDouble("Price: ");
-        int stock = readInt("Stock quantity: ");
-        String exp = readNonEmpty("Expiration date (YYYY-MM-DD): ");
+        double price= readDouble("Price: ");
+        int stock = readInt("Stoak: ");
+        String exp = readNonEmpty("Experation(YYYY-MM-DD) ");
         products.add(new FoodProduct(id, name, price, stock, exp));
-        System.out.println("Food product added!");
+        System.out.println("Added!");
+
     }
 
-    private void viewProducts() {
-        System.out.println("\n--- PRODUCTS ---");
-        if (products.isEmpty()) {
-            System.out.println("No products.");
+    private void viewProducts(){
+        System.out.println("/n---Products---");
+        if(products.isEmpty()){
+            System.out.println("No products");
             return;
         }
-        for (Product p : products) System.out.println(p);
+        for(Product p:products) System.out.println(p);
     }
 
     private void restock() throws InvalidInputException {
