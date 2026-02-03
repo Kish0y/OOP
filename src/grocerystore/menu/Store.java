@@ -1,26 +1,25 @@
 package grocerystore.menu;
 
+import grocerystore.database.ProductDAO;
 import grocerystore.exception.InvalidInputException;
 import grocerystore.model.*;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Store implements Menu {
 
-    private final ArrayList<Product> products = new ArrayList<>();
+                    //только через DAO
+    private final ProductDAO productDAO = new ProductDAO();
+
     private final ArrayList<Customer> customers = new ArrayList<>();
     private final ArrayList<Sale> sales = new ArrayList<>();
     private final Scanner scanner = new Scanner(System.in);
 
     public Store() {
-        customers.add(new Customer(1, "Aidar", "+77011234567", 20000));
-        customers.add(new GoldCustomer(2, "Asel", "+77012345678", 30000, 120));
-
-        products.add(new FoodProduct(10, "Milk", 600, 30, "2026-02-01"));
-        products.add(new FoodProduct(11, "Bread", 250, 50, "2026-01-28"));
-        products.add(new FoodProduct(12, "Apples", 900, 15, "2026-02-10"));
-        products.get(2).applyDiscount(10);
+        customers.add(new Customer(111, "Aidar", "+77011234567", 20000));
+        customers.add(new GoldCustomer(211, "Asel", "+77012345678", 30000, 120));
     }
 
     @Override
@@ -28,14 +27,16 @@ public class Store implements Menu {
         System.out.println("\n==============================");
         System.out.println("     GROCERY STORE MENU");
         System.out.println("==============================");
-        System.out.println("1. Add Food Product");
-        System.out.println("2. View Products");
-        System.out.println("3. Restock Product");
-        System.out.println("4. Apply Discount to Product");
-        System.out.println("5. Add Customer");
-        System.out.println("6. View Customers (Polymorphism)");
-        System.out.println("7. Make Sale");
-        System.out.println("8. View Sales");
+        System.out.println("1. Add Food Product (DB)");
+        System.out.println("2. View Products (DB)");
+        System.out.println("3. Update Product (DB)");
+        System.out.println("4. Delete Product (DB)");
+        System.out.println("5. Search Product by Name (DB)");
+        System.out.println("6. Search Product by Price Range (DB)");
+        System.out.println("7. Add Customer");
+        System.out.println("8. View Customers (Polymorphism)");
+        System.out.println("9. Make Sale (uses DB product)");
+        System.out.println("10. View Sales");
         System.out.println("0. Exit");
         System.out.println("==============================");
     }
@@ -50,14 +51,16 @@ public class Store implements Menu {
                 int choice = readInt("Enter choice: ");
 
                 switch (choice) {
-                    case 1 -> addFoodProduct();
-                    case 2 -> viewProducts();
-                    case 3 -> restock();
-                    case 4 -> discount();
-                    case 5 -> addCustomer();
-                    case 6 -> viewCustomers();
-                    case 7 -> makeSale();
-                    case 8 -> viewSales();
+                    case 1 -> addFoodProductDB();
+                    case 2 -> viewProductsDB();
+                    case 3 -> updateProductDB();
+                    case 4 -> deleteProductDB();
+                    case 5 -> searchByNameDB();
+                    case 6 -> searchByPriceRangeDB();
+                    case 7 -> addCustomer();
+                    case 8 -> viewCustomers();
+                    case 9 -> makeSale();
+                    case 10 -> viewSales();
                     case 0 -> running = false;
                     default -> System.out.println("Invalid choice!");
                 }
@@ -82,43 +85,103 @@ public class Store implements Menu {
         System.out.println("Bye! Store closed.");
     }
 
-    private void addFoodProduct() throws InvalidInputException {
-        System.out.println("\n--- ADD FOOD PRODUCT ---");
+                                       //DB Product actions
+
+    private void addFoodProductDB() throws InvalidInputException {
+        System.out.println("\n--- ADD FOOD PRODUCT (DB) ---");
         int id = readInt("Product ID: ");
         String name = readNonEmpty("Name: ");
         double price = readDouble("Price: ");
         int stock = readInt("Stock quantity: ");
         String exp = readNonEmpty("Expiration date (YYYY-MM-DD): ");
-        products.add(new FoodProduct(id, name, price, stock, exp));
-        System.out.println("Food product added!");
+
+        Product p = new FoodProduct(id, name, price, stock, exp);
+
+        boolean ok = productDAO.insertProduct(p);
+        System.out.println(ok ? "Inserted ✅" : "Insert failed ❌");
     }
 
-    private void viewProducts() {
-        System.out.println("\n--- PRODUCTS ---");
-        if (products.isEmpty()) {
-            System.out.println("No products.");
+    private void viewProductsDB() {
+        System.out.println("\n--- PRODUCTS (DB) ---");
+        List<Product> list = productDAO.getAllProducts();
+        if (list.isEmpty()) {
+            System.out.println("No products in DB.");
             return;
         }
-        for (Product p : products) System.out.println(p);
+        list.forEach(System.out::println);
     }
 
-    private void restock() throws InvalidInputException {
-        System.out.println("\n--- RESTOCK ---");
-        int id = readInt("Product ID: ");
-        Product p = findProduct(id);
-        int amount = readInt("Amount: ");
-        p.restock(amount);
-        System.out.println("Updated: " + p);
+    private void updateProductDB() throws InvalidInputException {
+        System.out.println("\n--- UPDATE PRODUCT (DB) ---");
+        int id = readInt("Product ID to update: ");
+
+        Product current = productDAO.getProductById(id);
+        if (current == null) {
+            System.out.println("Product not found: " + id);
+            return;
+        }
+
+                                     // contentReference[oaicite:3]{index=3}
+        System.out.println("Current: " + current);
+
+        String newName = readNonEmpty("New name: ");
+        double newPrice = readDouble("New price: ");
+        int newStock = readInt("New stock quantity: ");
+        double newDiscount = readDouble("New discount percent (0..100): ");
+
+        String newExp = null;
+        if (current instanceof FoodProduct) {
+            newExp = readNonEmpty("New expiration date (YYYY-MM-DD): ");
+        }
+
+        Product updated = new FoodProduct(id, newName, newPrice, newStock, newExp);
+        if (newDiscount > 0) updated.applyDiscount(newDiscount);
+
+        boolean ok = productDAO.updateProduct(updated);
+        System.out.println(ok ? "Updated ✅" : "Update failed ❌");
     }
 
-    private void discount() throws InvalidInputException {
-        System.out.println("\n--- DISCOUNT ---");
-        int id = readInt("Product ID: ");
-        Product p = findProduct(id);
-        double percent = readDouble("Discount percent: ");
-        p.applyDiscount(percent);
-        System.out.println("Updated: " + p);
+    private void deleteProductDB() throws InvalidInputException {
+        System.out.println("\n--- DELETE PRODUCT (DB) ---");
+        int id = readInt("Product ID to delete: ");
+
+                                        // delete:contentReference[oaicite:4]{index=4}
+        String confirm = readNonEmpty("Are you sure? type YES: ");
+        if (!confirm.equalsIgnoreCase("YES")) {
+            System.out.println("Delete cancelled.");
+            return;
+        }
+
+        boolean ok = productDAO.deleteProduct(id);
+        System.out.println(ok ? "Deleted ✅" : "Delete failed (maybe id not found) ❌");
     }
+
+    private void searchByNameDB() throws InvalidInputException {
+        System.out.println("\n--- SEARCH BY NAME (DB) ---");
+        String keyword = readNonEmpty("Keyword: ");
+
+        List<Product> list = productDAO.searchByName(keyword);
+        if (list.isEmpty()) {
+            System.out.println("No results.");
+            return;
+        }
+        list.forEach(System.out::println);
+    }
+
+    private void searchByPriceRangeDB() throws InvalidInputException {
+        System.out.println("\n--- SEARCH BY PRICE RANGE (DB) ---");
+        double min = readDouble("Min price: ");
+        double max = readDouble("Max price: ");
+
+        List<Product> list = productDAO.searchByPriceRange(min, max);
+        if (list.isEmpty()) {
+            System.out.println("No results.");
+            return;
+        }
+        list.forEach(System.out::println);
+    }
+
+                                        // Customers / Sales
 
     private void addCustomer() throws InvalidInputException {
         System.out.println("\n--- ADD CUSTOMER ---");
@@ -163,10 +226,27 @@ public class Store implements Menu {
         int qty = readInt("Quantity: ");
 
         Customer customer = findCustomer(customerId);
-        Product product = findProduct(productId);
 
-        if (!product.isInStock()) throw new IllegalArgumentException("Product out of stock");
-        product.takeFromStock(qty);
+                                        // продукт берём из DB
+        Product product = productDAO.getProductById(productId);
+        if (product == null) throw new IllegalArgumentException("Product not found: " + productId);
+
+        if (product.getStockQuantity() <= 0) throw new IllegalArgumentException("Product out of stock");
+        if (qty > product.getStockQuantity()) throw new IllegalArgumentException("Not enough stock");
+
+                               // уменьшаем stock + апдейтим в DB
+        if (product instanceof FoodProduct fp) {
+            FoodProduct updated = new FoodProduct(
+                    product.getProductId(),
+                    product.getName(),
+                    product.getPrice(),
+                    product.getStockQuantity() - qty,
+                    fp.getExpirationDate()
+            );
+            if (product.getDiscountPercent() > 0) updated.applyDiscount(product.getDiscountPercent());
+            productDAO.updateProduct(updated);
+            product = updated;
+        }
 
         double unitFinal = product.getFinalPrice();
         double extraDisc = customer.getExtraDiscountPercent();
@@ -191,15 +271,12 @@ public class Store implements Menu {
         for (Sale s : sales) System.out.println(s);
     }
 
-    private Product findProduct(int id) {
-        for (Product p : products) if (p.getProductId() == id) return p;
-        throw new IllegalArgumentException("Product not found: " + id);
-    }
-
     private Customer findCustomer(int id) {
         for (Customer c : customers) if (c.getCustomerId() == id) return c;
         throw new IllegalArgumentException("Customer not found: " + id);
     }
+
+                                       //input helpers
 
     private int readInt(String prompt) throws InvalidInputException {
         String s = readLine(prompt);

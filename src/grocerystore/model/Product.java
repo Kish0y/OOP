@@ -18,7 +18,6 @@ public abstract class Product implements Discountable {
         this.discountPercent = 0;
     }
 
-                  // abstract method
     public abstract String getCategory();
 
     public int getProductId() { return productId; }
@@ -27,7 +26,6 @@ public abstract class Product implements Discountable {
     public int getStockQuantity() { return stockQuantity; }
     public double getDiscountPercent() { return discountPercent; }
 
-                   // setters
     public void setProductId(int productId) {
         if (productId <= 0) throw new IllegalArgumentException("Product ID must be positive");
         this.productId = productId;
@@ -53,6 +51,10 @@ public abstract class Product implements Discountable {
         return stockQuantity > 0;
     }
 
+    public String getExpirationDate() {
+        return null;
+    }
+
     public void restock(int amount) {
         if (amount <= 0) throw new IllegalArgumentException("Restock amount must be > 0");
         stockQuantity += amount;
@@ -64,7 +66,6 @@ public abstract class Product implements Discountable {
         stockQuantity -= qty;
     }
 
-                                                 // Discountable
     @Override
     public void applyDiscount(double percent) {
         if (percent <= 0 || percent > 100)
