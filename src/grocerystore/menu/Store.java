@@ -203,14 +203,20 @@ public class Store implements Menu {
 
     private int readInt(String prompt) throws InvalidInputException {
         String s = readLine(prompt);
-        try { return Integer.parseInt(s); }
-        catch (NumberFormatException e) { throw new InvalidInputException("Expected integer, got: " + s); }
+        try {
+            return Integer.parseInt(s);
+        } catch (NumberFormatException e) {
+            throw new InvalidInputException("Expected integer, got: " + s);
+        }
     }
 
     private double readDouble(String prompt) throws InvalidInputException {
         String s = readLine(prompt);
-        try { return Double.parseDouble(s); }
-        catch (NumberFormatException e) { throw new InvalidInputException("Expected number, got: " + s); }
+        try {
+            return Double.parseDouble(s);
+        } catch (NumberFormatException e) {
+            throw new InvalidInputException("Expected number, got: " + s);
+        }
     }
 
     private String readNonEmpty(String prompt) throws InvalidInputException {
